@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Split & Rename</title>
+</head>
+<body style="font-family: Arial; padding: 40px;">
+
+    <h2>Upload PDF & Excel</h2>
+
+    <form action="/process" method="POST" enctype="multipart/form-data">
+        
+        <label>Upload PDF:</label><br>
+        <input type="file" name="pdf" required><br><br>
+
+        <label>Upload Excel:</label><br>
+        <input type="file" name="excel" required><br><br>
+
+        <button type="submit">Process</button>
+
+    </form>
+
+</body>
+</html>
