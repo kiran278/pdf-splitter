@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>PDF Split & Rename</title>
@@ -20,4 +20,130 @@
     </form>
 
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>PDF Split & Rename - Spatika</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Tailwind CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <style>
+            .loader {
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #6366f1;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+
+    <body
+        class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex items-center justify-center p-4">
+
+        <div class="bg-white shadow-2xl rounded-3xl p-8 w-full max-w-lg">
+
+            <!-- Title -->
+            <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">
+                📄 PDF Split & Rename
+            </h1>
+
+            <!-- Form -->
+            <form id="uploadForm" action="/process" method="POST" enctype="multipart/form-data" class="space-y-5">
+
+                <!-- PDF Upload -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Upload PDF</label>
+                    <input type="file" name="pdf" required
+                        class="w-full border-2 border-dashed border-indigo-300 rounded-xl p-3 hover:border-indigo-500 transition">
+                </div>
+
+                <!-- Excel Upload -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Upload Excel</label>
+                    <input type="file" name="excel" required
+                        class="w-full border-2 border-dashed border-purple-300 rounded-xl p-3 hover:border-purple-500 transition">
+                </div>
+
+                <!-- Button -->
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-xl font-semibold text-lg hover:scale-105 transition transform">
+                    🚀 Process Files
+                </button>
+
+            </form>
+
+            <!-- Loader -->
+            <div id="loading" class="hidden flex flex-col items-center mt-6">
+                <div class="loader mb-2"></div>
+                <p class="text-gray-600">Processing... Please wait</p>
+            </div>
+
+            <!-- Footer -->
+            <p class="text-center text-sm text-gray-500 mt-8">
+                Developed by <span class="font-semibold text-indigo-600">Kiran</span>
+            </p>
+
+        </div>
+
+        <!-- Script -->
+        <script>
+            const form = document.getElementById('uploadForm');
+            const loading = document.getElementById('loading');
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault(); // stop normal submit
+
+                loading.classList.remove('hidden');
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('/process', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error("Processing failed");
+
+                    const blob = await response.blob();
+
+                    // Download file
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "output.zip";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    window.URL.revokeObjectURL(url);
+
+                } catch (error) {
+                    alert(error.message);
+                }
+
+                // ✅ Hide loader AFTER download
+                loading.classList.add('hidden');
+            });
+        </script>
+
+    </body>
 </html>
